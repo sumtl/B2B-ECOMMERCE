@@ -30,8 +30,25 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files 
+.env
+.env.local
+
+# Keep .env.example for reference
+!.env.example
+
+# macOS specific files
+.AppleDouble
+.LSOverride
+
+# Editor temporary files
+*.swp
+*.swo
+*~
+
+# IDE configurations
+.vscode/
+.idea/
 
 # vercel
 .vercel
@@ -39,3 +56,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# documentation (pending improvements)
+/doc/
