@@ -1,0 +1,165 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  BUYER
+  ADMIN
+}
+
+enum OwnerType {
+  PLATFORM
+  SUPPLIER
+  BUYER
+}
+
+enum OrderStatus {
+  CREATED
+  PAID
+  SHIPPED
+  CANCELLED
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  slug      String   @unique
+  icon      String?
+  products  Product[]
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String   @unique            // id from Clerk
+  role      Role     @default(BUYER)
+  firstName String?
+  lastName  String?
+  email     String?  @unique           
+  company   String?                     // buyer company name
+  phone     String?                     // buyer phone number
+  address   String?                     // buyer shipping address
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  cart       Cart?
+  orders     Order[]
+  savedLists SavedList[]
+}
+
+model Product {
+  id            String      @id @default(uuid())
+  sku           String?     @unique
+  name          String
+  description   String?
+  priceCents    Int
+  unit          String?
+  lowThreshold  Int         @default(0)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  categoryId    String?
+  category      Category?   @relation(fields: [categoryId], references: [id])
+
+  inventories   Inventory[]
+  cartItems     CartItem[]
+  orderLines    OrderLine[]
+  savedListItems SavedListItem[]
+}
+
+model Inventory {
+  id         String    @id @default(uuid())
+  product    Product   @relation(fields: [productId], references: [id])
+  productId  String
+  ownerType  OwnerType @default(PLATFORM)
+  ownerId    String?
+  quantity   Int       @default(0)
+  threshold  Int? 
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  buyer     User       @relation(fields: [buyerId], references: [id])
+  buyerId   String     @unique
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  items CartItem[]
+  // optional link to order if cart converted:
+  order   Order?  @relation(fields: [orderId], references: [id])
+  orderId String? @unique
+}
+
+model CartItem {
+  id             String  @id @default(uuid())
+  cart           Cart    @relation(fields: [cartId], references: [id])
+  cartId         String
+  product        Product @relation(fields: [productId], references: [id])
+  productId      String
+  quantity       Int
+  unitPriceCents Int
+  @@unique([cartId, productId])
+}
+
+model SavedList {
+  id         String          @id @default(uuid())
+  buyer      User            @relation(fields: [buyerId], references: [id])
+  buyerId    String
+  name       String
+  description String?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  items SavedListItem[]
+}
+
+model SavedListItem {
+  id        String   @id @default(uuid())
+  list      SavedList @relation(fields: [listId], references: [id])
+  listId    String
+  product   Product  @relation(fields: [productId], references: [id])
+  productId String
+  quantity  Int
+  @@unique([listId, productId])
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  buyer         User        @relation(fields: [buyerId], references: [id])
+  buyerId       String
+  status        OrderStatus @default(CREATED)
+  subtotalCents Int         // Base product cost
+  taxCents      Int         @default(0)        // Quebec tax (GST + QST)
+  shippingCents Int         @default(0)        // Shipping cost
+  totalCents    Int                            // subtotal + tax + shipping
+  poNumber      String?
+  notes         String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  lines OrderLine[]
+
+  // optional back-reference to the Cart that produced this Order
+  cart Cart?
+}
+
+model OrderLine {
+  id             String  @id @default(uuid())
+  order          Order   @relation(fields: [orderId], references: [id])
+  orderId        String
+  product        Product @relation(fields: [productId], references: [id])
+  productId      String
+  quantity       Int
+  unitPriceCents Int
+}
