@@ -3,9 +3,12 @@
 import Link from "next/link";
 import { UserButton, SignInButton, useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
 
 export function Navbar() {
   const { isSignedIn } = useAuth();
+  const router = useRouter();
+  const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
@@ -21,6 +24,20 @@ export function Navbar() {
           const data = await res.json();
           const isAdminUser = data.user?.role === "ADMIN";
           setIsAdmin(isAdminUser);
+
+          // Redirect admin to /admin dashboard if on buyer pages
+          if (
+            isAdminUser &&
+            (pathname === "/" ||
+              pathname.startsWith("/products") ||
+              pathname.startsWith("/cart") ||
+              pathname.startsWith("/saved-lists") ||
+              pathname.startsWith("/orders") ||
+              pathname.startsWith("/checkout") ||
+              pathname.startsWith("/dashboard"))
+          ) {
+            router.push("/admin");
+          }
         }
       } catch (error) {
         console.error("Failed to fetch user role:", error);
@@ -28,7 +45,7 @@ export function Navbar() {
     };
 
     fetchUserRole();
-  }, [isSignedIn]);
+  }, [isSignedIn, pathname, router]);
 
   return (
     <nav className="bg-blue-800 text-white px-4 py-4 shadow-md">
