@@ -167,7 +167,7 @@ export default function CreateCategoryPage() {
               type="submit"
               disabled={loading}
               variant="primary"
-              fullWidth
+              className="flex-1"
             >
               {loading ? "Creating..." : "Create Category"}
             </Button>

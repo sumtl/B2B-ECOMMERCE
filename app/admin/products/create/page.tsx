@@ -431,7 +431,7 @@ export default function CreateProductPage() {
               type="submit"
               disabled={loading}
               variant="primary"
-              fullWidth
+              className="flex-1"
             >
               {loading ? "Creating..." : "Create Product"}
             </Button>
