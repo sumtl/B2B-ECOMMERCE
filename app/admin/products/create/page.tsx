@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Card, Input } from "@/components/ui";
+import { footerStyles } from "@/app/ui-styles";
 
 /**
  * Create Product Page(Admin-only)
@@ -199,7 +200,7 @@ export default function CreateProductPage() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <div className="mb-6">
         <Link href="/admin/products">
-          <Button className="bg-gray-600 hover:bg-gray-700">← Back</Button>
+          <Button variant="secondary">← Back</Button>
         </Link>
       </div>
 
@@ -429,21 +430,41 @@ export default function CreateProductPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+              variant="primary"
+              fullWidth
             >
               {loading ? "Creating..." : "Create Product"}
             </Button>
             <Link href="/admin/products" className="flex-1">
-              <Button
-                type="button"
-                className="w-full bg-gray-600 hover:bg-gray-700"
-              >
+              <Button type="button" variant="secondary" fullWidth>
                 Cancel
               </Button>
             </Link>
           </div>
         </form>
       </Card>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

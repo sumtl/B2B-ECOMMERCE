@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
+import { buttonStyles, footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Saved Lists Page - Manage saved product lists
@@ -203,9 +204,7 @@ export default function SavedListsPage() {
               You need to sign in to view your saved lists
             </p>
             <SignInButton mode="modal">
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded transition">
-                Sign In Now
-              </button>
+              <button className={buttonStyles.primary}>Sign In Now</button>
             </SignInButton>
           </div>
         </div>
@@ -214,224 +213,258 @@ export default function SavedListsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Saved Lists</h1>
-          <div className="space-x-2">
-            {!showCreateForm && (
-              <button
-                onClick={() => setShowCreateForm(true)}
-                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
-              >
-                Create New List
-              </button>
-            )}
-            <Link
-              href="/cart"
-              className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 inline-block"
-            >
-              Cart
-            </Link>
-          </div>
-        </div>
-
-        {/* Create Form */}
-        {showCreateForm && (
-          <div className="bg-white p-6 rounded-lg shadow mb-6">
-            <h2 className="text-xl font-semibold mb-4">Create New List</h2>
-            <input
-              type="text"
-              placeholder="List Name"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <textarea
-              placeholder="Description (Optional)"
-              value={newListDesc}
-              onChange={(e) => setNewListDesc(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={handleCreateList}
-                className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800"
-              >
-                Create
-              </button>
-              <button
-                onClick={() => setShowCreateForm(false)}
-                className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
-              >
-                Cancel
-              </button>
+    <div className={layoutStyles.pageWrapper}>
+      <div className={layoutStyles.pageContent}>
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">Saved Lists</h1>
+            <div className="space-x-2">
+              {!showCreateForm && (
+                <button
+                  onClick={() => setShowCreateForm(true)}
+                  className={buttonStyles.primary}
+                >
+                  Create New List
+                </button>
+              )}
+              <Link href="/cart" className={buttonStyles.primary}>
+                Cart
+              </Link>
             </div>
           </div>
-        )}
 
-        {/* Lists */}
-        {loading ? (
-          <div className="text-center py-12">Loading...</div>
-        ) : lists.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">No saved lists</div>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {lists.map((list) => (
-              <div key={list.id} className="bg-white rounded-lg shadow p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-semibold">{list.name}</h3>
-                    {list.description && (
-                      <p className="text-gray-600 text-sm">
-                        {list.description}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-500 mt-1">
-                      Created:{" "}
-                      {new Date(list.createdAt).toLocaleDateString("en-US")}
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => handleOrderFromList(list.id)}
-                      className="bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700 text-sm"
-                    >
-                      Order From List
-                    </button>
-                    <button
-                      onClick={() => handleDeleteList(list.id)}
-                      className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-
-                {list.items.length > 0 ? (
-                  <div className="border-t pt-4">
-                    <h4 className="font-semibold mb-2">
-                      Items ({list.items.length} total)
-                    </h4>
-                    <div className="space-y-2 max-h-40 overflow-y-auto">
-                      {list.items.map((item) => (
-                        <div
-                          key={item.id}
-                          className="flex justify-between text-sm"
-                        >
-                          <span>
-                            {item.product.name} (SKU: {item.product.sku})
-                          </span>
-                          <span>
-                            ${(item.product.priceCents / 100).toFixed(2)} x{" "}
-                            {item.quantity}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    <button
-                      onClick={() => {
-                        setSelectedListForAddItem(list.id);
-                        if (!productsLoaded || availableProducts.length === 0) {
-                          fetchProducts();
-                        }
-                      }}
-                      className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      + Add Item to List
-                    </button>
-                  </div>
-                ) : (
-                  <div>
-                    <p className="text-gray-500 text-sm mt-4">
-                      This list is empty
-                    </p>
-                    <button
-                      onClick={() => {
-                        setSelectedListForAddItem(list.id);
-                        if (!productsLoaded || availableProducts.length === 0) {
-                          fetchProducts();
-                        }
-                      }}
-                      className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      + Add Item to List
-                    </button>
-                  </div>
-                )}
-
-                {/* Add Item Modal */}
-                {selectedListForAddItem === list.id && (
-                  <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                    <h5 className="font-semibold mb-3">Add Product to List</h5>
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-sm font-medium mb-1">
-                          Select Product
-                        </label>
-                        <select
-                          value={addItemProductId}
-                          onChange={(e) => setAddItemProductId(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          disabled={availableProducts.length === 0}
-                        >
-                          <option value="">
-                            {!productsLoaded
-                              ? "Loading products..."
-                              : availableProducts.length === 0
-                              ? "No products available"
-                              : "-- Select a product --"}
-                          </option>
-                          {availableProducts.map((product) => (
-                            <option key={product.id} value={product.id}>
-                              {product.name} (SKU: {product.sku}) - $
-                              {(product.priceCents / 100).toFixed(2)}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium mb-1">
-                          Quantity
-                        </label>
-                        <input
-                          type="number"
-                          min="1"
-                          value={addItemQuantity}
-                          onChange={(e) =>
-                            setAddItemQuantity(
-                              Math.max(1, parseInt(e.target.value) || 1)
-                            )
-                          }
-                          className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleAddItemToList(list.id)}
-                          disabled={
-                            !addItemProductId || availableProducts.length === 0
-                          }
-                          className="flex-1 bg-blue-600 text-white px-3 py-2 rounded hover:bg-blue-700 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          Add to List
-                        </button>
-                        <button
-                          onClick={() => setSelectedListForAddItem(null)}
-                          className="flex-1 bg-gray-300 text-gray-800 px-3 py-2 rounded hover:bg-gray-400 text-sm font-medium"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
+          {/* Create Form */}
+          {showCreateForm && (
+            <div className="bg-white p-6 rounded-lg shadow mb-6">
+              <h2 className="text-xl font-semibold mb-4">Create New List</h2>
+              <input
+                type="text"
+                placeholder="List Name"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <textarea
+                placeholder="Description (Optional)"
+                value={newListDesc}
+                onChange={(e) => setNewListDesc(e.target.value)}
+                className="w-full px-4 py-2 border border-gray-300 rounded mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                rows={3}
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handleCreateList}
+                  className={buttonStyles.primary}
+                >
+                  Create
+                </button>
+                <button
+                  onClick={() => setShowCreateForm(false)}
+                  className={buttonStyles.secondary}
+                >
+                  Cancel
+                </button>
               </div>
-            ))}
-          </div>
-        )}
+            </div>
+          )}
+
+          {/* Lists */}
+          {loading ? (
+            <div className="text-center py-12">Loading...</div>
+          ) : lists.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              No saved lists
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4">
+              {lists.map((list) => (
+                <div key={list.id} className="bg-white rounded-lg shadow p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-semibold">{list.name}</h3>
+                      {list.description && (
+                        <p className="text-gray-600 text-sm">
+                          {list.description}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-500 mt-1">
+                        Created:{" "}
+                        {new Date(list.createdAt).toLocaleDateString("en-US")}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleOrderFromList(list.id)}
+                        className={buttonStyles.primary}
+                      >
+                        Order From List
+                      </button>
+                      <button
+                        onClick={() => handleDeleteList(list.id)}
+                        className={buttonStyles.danger}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+
+                  {list.items.length > 0 ? (
+                    <div className="border-t pt-4">
+                      <h4 className="font-semibold mb-2">
+                        Items ({list.items.length} total)
+                      </h4>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {list.items.map((item) => (
+                          <div
+                            key={item.id}
+                            className="flex justify-between text-sm"
+                          >
+                            <span>
+                              {item.product.name} (SKU: {item.product.sku})
+                            </span>
+                            <span>
+                              ${(item.product.priceCents / 100).toFixed(2)} x{" "}
+                              {item.quantity}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                      <button
+                        onClick={() => {
+                          setSelectedListForAddItem(list.id);
+                          if (
+                            !productsLoaded ||
+                            availableProducts.length === 0
+                          ) {
+                            fetchProducts();
+                          }
+                        }}
+                        className="mt-3 text-sm text-blue-600 hover:text-blue-800 font-medium"
+                      >
+                        + Add Item to List
+                      </button>
+                    </div>
+                  ) : (
+                    <div>
+                      <p className="text-gray-500 text-sm mt-4">
+                        This list is empty
+                      </p>
+                      <button
+                        onClick={() => {
+                          setSelectedListForAddItem(list.id);
+                          if (
+                            !productsLoaded ||
+                            availableProducts.length === 0
+                          ) {
+                            fetchProducts();
+                          }
+                        }}
+                        className="mt-3 text-sm font-medium text-black hover:text-gray-600"
+                      >
+                        + Add Item to List
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Add Item Modal */}
+                  {selectedListForAddItem === list.id && (
+                    <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <h5 className="font-semibold mb-3">
+                        Add Product to List
+                      </h5>
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium mb-1">
+                            Select Product
+                          </label>
+                          <select
+                            value={addItemProductId}
+                            onChange={(e) =>
+                              setAddItemProductId(e.target.value)
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            disabled={availableProducts.length === 0}
+                          >
+                            <option value="">
+                              {!productsLoaded
+                                ? "Loading products..."
+                                : availableProducts.length === 0
+                                ? "No products available"
+                                : "-- Select a product --"}
+                            </option>
+                            {availableProducts.map((product) => (
+                              <option key={product.id} value={product.id}>
+                                {product.name} (SKU: {product.sku}) - $
+                                {(product.priceCents / 100).toFixed(2)}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium mb-1">
+                            Quantity
+                          </label>
+                          <input
+                            type="number"
+                            min="1"
+                            value={addItemQuantity}
+                            onChange={(e) =>
+                              setAddItemQuantity(
+                                Math.max(1, parseInt(e.target.value) || 1)
+                              )
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleAddItemToList(list.id)}
+                            disabled={
+                              !addItemProductId ||
+                              availableProducts.length === 0
+                            }
+                            className={`flex-1 ${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed`}
+                          >
+                            Add to List
+                          </button>
+                          <button
+                            onClick={() => setSelectedListForAddItem(null)}
+                            className={`flex-1 ${buttonStyles.secondary}`}
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

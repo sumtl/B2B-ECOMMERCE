@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
+import { buttonStyles, footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Orders Page - Buyer's order history and details(buyer-only)
@@ -162,126 +163,147 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Order History</h1>
-          <Link
-            href="/products"
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
-            Continue Shopping
-          </Link>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12">Loading...</div>
-        ) : orders.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">No orders yet</div>
-        ) : (
-          <div className="space-y-4">
-            {orders.map((order) => (
-              <div key={order.id} className="bg-white rounded-lg shadow p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-lg font-semibold">
-                      Order #{order.id.slice(0, 8)}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {new Date(order.createdAt).toLocaleDateString("en-US")}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${statusColor(
-                        order.status
-                      )}`}
-                    >
-                      {order.status}
-                    </span>
-                    <p className="text-xl font-bold text-blue-600 mt-2">
-                      ${(order.totalCents / 100).toFixed(2)}
-                    </p>
-                  </div>
-                </div>
-
-                {order.poNumber && (
-                  <p className="text-sm text-gray-600 mb-3">
-                    PO Number: {order.poNumber}
-                  </p>
-                )}
-
-                <div className="border-t pt-4">
-                  <h4 className="font-semibold mb-2">Order Items</h4>
-                  <div className="space-y-2">
-                    {order.lines.map((line) => (
-                      <div
-                        key={line.id}
-                        className="flex justify-between text-sm"
-                      >
-                        <span>
-                          {line.product.name} (SKU: {line.product.sku})
-                        </span>
-                        <span>
-                          ${(line.unitPriceCents / 100).toFixed(2)} x{" "}
-                          {line.quantity} = $
-                          {(
-                            (line.unitPriceCents * line.quantity) /
-                            100
-                          ).toFixed(2)}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="border-t mt-4 pt-4 flex gap-3">
-                  {order.status === "CREATED" && (
-                    <>
-                      <button
-                        onClick={() => handlePayOrder(order.id)}
-                        disabled={actioningOrderId === order.id}
-                        className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
-                      >
-                        {actioningOrderId === order.id && actionType === "pay"
-                          ? "Processing..."
-                          : "Pay Now"}
-                      </button>
-                      <button
-                        onClick={() => handleCancelOrder(order.id)}
-                        disabled={actioningOrderId === order.id}
-                        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed transition"
-                      >
-                        {actioningOrderId === order.id &&
-                        actionType === "cancel"
-                          ? "Cancelling..."
-                          : "Cancel Order"}
-                      </button>
-                    </>
-                  )}
-                  {order.status === "PAID" && (
-                    <span className="text-green-600 font-medium text-sm">
-                      ✓ Payment received
-                    </span>
-                  )}
-                  {order.status === "CANCELLED" && (
-                    <span className="text-red-600 font-medium text-sm">
-                      ✗ Order cancelled
-                    </span>
-                  )}
-                </div>
-
-                {actionError && actioningOrderId === order.id && (
-                  <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
-                    {actionError}
-                  </div>
-                )}
-              </div>
-            ))}
+    <div className={layoutStyles.pageWrapper}>
+      <div className={layoutStyles.pageContent}>
+        <div className="max-w-6xl mx-auto px-4 py-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-3xl font-bold">Order History</h1>
+            <Link href="/products" className={buttonStyles.primary}>
+              Continue Shopping
+            </Link>
           </div>
-        )}
+
+          {loading ? (
+            <div className="text-center py-12">Loading...</div>
+          ) : orders.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">No orders yet</div>
+          ) : (
+            <div className="space-y-4">
+              {orders.map((order) => (
+                <div key={order.id} className="bg-white rounded-lg shadow p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-lg font-semibold">
+                        Order #{order.id.slice(0, 8)}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {new Date(order.createdAt).toLocaleDateString("en-US")}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span
+                        className={`px-3 py-1 rounded-full text-sm font-medium ${statusColor(
+                          order.status
+                        )}`}
+                      >
+                        {order.status}
+                      </span>
+                      <p className="text-xl font-bold text-blue-600 mt-2">
+                        ${(order.totalCents / 100).toFixed(2)}
+                      </p>
+                    </div>
+                  </div>
+
+                  {order.poNumber && (
+                    <p className="text-sm text-gray-600 mb-3">
+                      PO Number: {order.poNumber}
+                    </p>
+                  )}
+
+                  <div className="border-t pt-4">
+                    <h4 className="font-semibold mb-2">Order Items</h4>
+                    <div className="space-y-2">
+                      {order.lines.map((line) => (
+                        <div
+                          key={line.id}
+                          className="flex justify-between text-sm"
+                        >
+                          <span>
+                            {line.product.name} (SKU: {line.product.sku})
+                          </span>
+                          <span>
+                            ${(line.unitPriceCents / 100).toFixed(2)} x{" "}
+                            {line.quantity} = $
+                            {(
+                              (line.unitPriceCents * line.quantity) /
+                              100
+                            ).toFixed(2)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="border-t mt-4 pt-4 flex gap-3">
+                    {order.status === "CREATED" && (
+                      <>
+                        <button
+                          onClick={() => handlePayOrder(order.id)}
+                          disabled={actioningOrderId === order.id}
+                          className={`${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed text-sm`}
+                        >
+                          {actioningOrderId === order.id && actionType === "pay"
+                            ? "Processing..."
+                            : "Pay Now"}
+                        </button>
+                        <button
+                          onClick={() => handleCancelOrder(order.id)}
+                          disabled={actioningOrderId === order.id}
+                          className={`${buttonStyles.dangerLarge} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        >
+                          {actioningOrderId === order.id &&
+                          actionType === "cancel"
+                            ? "Cancelling..."
+                            : "Cancel Order"}
+                        </button>
+                      </>
+                    )}
+                    {order.status === "PAID" && (
+                      <span className="text-green-600 font-medium text-sm">
+                        ✓ Payment received
+                      </span>
+                    )}
+                    {order.status === "CANCELLED" && (
+                      <span className="text-red-600 font-medium text-sm">
+                        ✗ Order cancelled
+                      </span>
+                    )}
+                  </div>
+
+                  {actionError && actioningOrderId === order.id && (
+                    <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                      {actionError}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

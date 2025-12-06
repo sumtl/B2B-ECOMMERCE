@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Card } from "@/components/ui";
+import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Dashboard Page - Buyer's personal profile management
@@ -140,222 +141,245 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6">
-          <Link href="/">
-            <Button className="bg-gray-600 hover:bg-gray-700">← Back</Button>
-          </Link>
-        </div>
-
-        <Card className="p-8">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-3xl font-bold">My Profile</h1>
-            {!editing && (
-              <Button
-                onClick={() => setEditing(true)}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                Edit Profile
-              </Button>
-            )}
+    <div className={layoutStyles.pageWrapper}>
+      <div className={layoutStyles.pageContent}>
+        <div className="max-w-2xl mx-auto px-4 py-12">
+          <div className="mb-6">
+            <Link href="/">
+              <Button variant="secondary">← Back</Button>
+            </Link>
           </div>
 
-          {/* Success Message */}
-          {success && (
-            <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-              ✅ {success}
+          <Card className="p-8">
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-3xl font-bold">My Profile</h1>
+              {!editing && (
+                <Button onClick={() => setEditing(true)} variant="primary">
+                  Edit Profile
+                </Button>
+              )}
             </div>
-          )}
 
-          {/* Error Message */}
-          {error && (
-            <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
-              ❌ {error}
-            </div>
-          )}
+            {/* Success Message */}
+            {success && (
+              <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+                ✅ {success}
+              </div>
+            )}
 
-          {!editing ? (
-            // View Mode
-            <div className="space-y-6">
-              {/* Account Section */}
-              <div className="border-b pb-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                  Account Information
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Email</p>
-                    <p className="text-lg font-medium text-gray-900">
-                      {user.email || "N/A"}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1">
-                      (Cannot be changed)
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Role</p>
-                    <p className="text-lg font-medium text-gray-900 capitalize">
-                      {user.role}
-                    </p>
+            {/* Error Message */}
+            {error && (
+              <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+                ❌ {error}
+              </div>
+            )}
+
+            {!editing ? (
+              // View Mode
+              <div className="space-y-6">
+                {/* Account Section */}
+                <div className="border-b pb-6">
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                    Account Information
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Email</p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {user.email || "N/A"}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        (Cannot be changed)
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Role</p>
+                      <p className="text-lg font-medium text-gray-900 capitalize">
+                        {user.role}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Personal Information Section */}
-              <div className="border-b pb-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                  Personal Information
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">First Name</p>
-                    <p className="text-lg font-medium text-gray-900">
-                      {user.firstName || "Not provided"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Last Name</p>
-                    <p className="text-lg font-medium text-gray-900">
-                      {user.lastName || "Not provided"}
-                    </p>
+                {/* Personal Information Section */}
+                <div className="border-b pb-6">
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                    Personal Information
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">First Name</p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {user.firstName || "Not provided"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Last Name</p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {user.lastName || "Not provided"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Business Information Section */}
-              <div className="border-b pb-6">
-                <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                  Business Information
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-600">Company Name</p>
-                    <p className="text-lg font-medium text-gray-900">
-                      {user.company || "Not provided"}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-600">Phone</p>
-                    <p className="text-lg font-medium text-gray-900">
-                      {user.phone || "Not provided"}
-                    </p>
+                {/* Business Information Section */}
+                <div className="border-b pb-6">
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                    Business Information
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <p className="text-sm text-gray-600">Company Name</p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {user.company || "Not provided"}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Phone</p>
+                      <p className="text-lg font-medium text-gray-900">
+                        {user.phone || "Not provided"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Shipping Address Section */}
-              <div>
-                <h2 className="text-xl font-semibold mb-4 text-gray-900">
-                  Shipping Address
-                </h2>
+                {/* Shipping Address Section */}
                 <div>
-                  <p className="text-sm text-gray-600">Address</p>
-                  <p className="text-lg font-medium text-gray-900 break-words">
-                    {user.address || "Not provided"}
-                  </p>
+                  <h2 className="text-xl font-semibold mb-4 text-gray-900">
+                    Shipping Address
+                  </h2>
+                  <div>
+                    <p className="text-sm text-gray-600">Address</p>
+                    <p className="text-lg font-medium text-gray-900 break-words">
+                      {user.address || "Not provided"}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            // Edit Mode
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* First Name */}
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  First Name
-                </label>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  placeholder="Enter your first name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+            ) : (
+              // Edit Mode
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* First Name */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    placeholder="Enter your first name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Last Name */}
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Last Name
-                </label>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  placeholder="Enter your last name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Last Name */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    placeholder="Enter your last name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Company Name */}
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Company Name
-                </label>
-                <input
-                  type="text"
-                  name="company"
-                  value={formData.company}
-                  onChange={handleChange}
-                  placeholder="Enter your company name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Company Name */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Company Name
+                  </label>
+                  <input
+                    type="text"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    placeholder="Enter your company name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Phone */}
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="Enter your phone number"
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Phone */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="Enter your phone number"
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Address */}
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Shipping Address
-                </label>
-                <textarea
-                  name="address"
-                  value={formData.address}
-                  onChange={handleChange}
-                  placeholder="Enter your shipping address"
-                  rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
+                {/* Address */}
+                <div>
+                  <label className="block text-sm font-semibold mb-2">
+                    Shipping Address
+                  </label>
+                  <textarea
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    placeholder="Enter your shipping address"
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
 
-              {/* Buttons */}
-              <div className="flex gap-4 pt-6">
-                <Button
-                  type="submit"
-                  disabled={saving}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {saving ? "Saving..." : "Save Changes"}
-                </Button>
-                <Button
-                  type="button"
-                  onClick={() => setEditing(false)}
-                  className="flex-1 bg-gray-600 hover:bg-gray-700"
-                >
-                  Cancel
-                </Button>
-              </div>
-            </form>
-          )}
-        </Card>
+                {/* Buttons */}
+                <div className="flex gap-4 pt-6">
+                  <Button
+                    type="submit"
+                    disabled={saving}
+                    variant="primary"
+                    fullWidth
+                  >
+                    {saving ? "Saving..." : "Save Changes"}
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setEditing(false)}
+                    variant="secondary"
+                    fullWidth
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </form>
+            )}
+          </Card>
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

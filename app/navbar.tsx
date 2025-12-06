@@ -4,7 +4,7 @@ import Link from "next/link";
 import { UserButton, SignInButton, useAuth } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-
+import { navbarStyles } from "./ui-styles";
 export function Navbar() {
   const { isSignedIn } = useAuth();
   const router = useRouter();
@@ -47,55 +47,52 @@ export function Navbar() {
     fetchUserRole();
   }, [isSignedIn, pathname, router]);
 
+  const getLinkClass = (path: string) =>
+    pathname === path ? navbarStyles.activeLink : navbarStyles.link;
+
   return (
-    <nav className="bg-blue-800 text-white px-4 py-4 shadow-md">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <Link
-          href={isAdmin ? "/admin" : "/"}
-          className="text-2xl font-bold hover:text-blue-200 transition"
-        >
+    <nav className={navbarStyles.navContainer}>
+      <div className={navbarStyles.navContent}>
+        <Link href={isAdmin ? "/admin" : "/"} className={navbarStyles.logo}>
           B2B Commerce {isAdmin && "(Admin)"}
         </Link>
         <div className="flex gap-6 items-center">
           {isAdmin ? (
             <>
-              <Link href="/admin" className="hover:text-blue-200 transition">
+              <Link href="/admin" className={getLinkClass("/admin")}>
                 Dashboard
               </Link>
               <Link
                 href="/admin/products"
-                className="hover:text-blue-200 transition"
+                className={getLinkClass("admin/products")}
               >
                 Products
               </Link>
               <Link
                 href="/admin/categories"
-                className="hover:text-blue-200 transition"
+                className={getLinkClass("admin/categories")}
               >
                 Categories
               </Link>
             </>
           ) : (
             <>
-              <Link href="/products" className="hover:text-blue-200 transition">
+              <Link href="/products" className={getLinkClass("/products")}>
                 Products
               </Link>
-              <Link href="/cart" className="hover:text-blue-200 transition">
+              <Link href="/cart" className={getLinkClass("/cart")}>
                 Cart
               </Link>
-              <Link href="/orders" className="hover:text-blue-200 transition">
+              <Link href="/orders" className={getLinkClass("/orders")}>
                 Orders
               </Link>
               <Link
                 href="/saved-lists"
-                className="hover:text-blue-200 transition"
+                className={getLinkClass("/saved-lists")}
               >
                 Lists
               </Link>
-              <Link
-                href="/dashboard"
-                className="hover:text-blue-200 transition"
-              >
+              <Link href="/dashboard" className={getLinkClass("/dashboard")}>
                 Profile
               </Link>
             </>
@@ -104,19 +101,10 @@ export function Navbar() {
           {/* Authentication Section */}
           <div className="border-l border-blue-400 pl-6">
             {isSignedIn ? (
-              <UserButton
-                afterSignOutUrl="/"
-                appearance={{
-                  elements: {
-                    avatarBox: "w-10 h-10",
-                  },
-                }}
-              />
+              <UserButton afterSignOutUrl="/" />
             ) : (
               <SignInButton mode="modal">
-                <button className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded transition">
-                  Sign In
-                </button>
+                <button className={navbarStyles.signInBtn}>Sign In</button>
               </SignInButton>
             )}
           </div>

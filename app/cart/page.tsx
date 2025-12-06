@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import { Button, Card } from "@/components/ui";
 import { calculateOrderTotal } from "@/lib/utils";
+import { footerStyles, buttonStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Cart Page - Shopping cart management(buyer-only)
@@ -165,166 +166,204 @@ export default function CartPage() {
     calculateOrderTotal(subtotalCents);
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
+    <div className={layoutStyles.pageWrapper}>
+      <div className={layoutStyles.pageContent}>
+        <div className="max-w-4xl mx-auto px-4 py-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-8">
+            Shopping Cart
+          </h1>
 
-        {cartItems.length === 0 ? (
-          <div className="text-center py-12 bg-white rounded-lg shadow-sm">
-            <p className="text-gray-600 mb-6">Your cart is empty</p>
-            <Link href="/products">
-              <Button>Continue Shopping</Button>
-            </Link>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Cart Items */}
-            <div className="lg:col-span-2">
-              <Card className="mb-6">
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b">
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Product
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Price
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Quantity
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Total
-                        </th>
-                        <th className="text-left py-3 px-4 font-semibold text-gray-900">
-                          Action
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {cartItems.map((item) => (
-                        <tr key={item.id} className="border-b hover:bg-gray-50">
-                          <td className="py-3 px-4">
-                            <div>
-                              <p className="font-medium text-gray-900">
-                                {item.product.name}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {item.product.sku}
-                              </p>
-                            </div>
-                          </td>
-                          <td className="py-3 px-4 text-gray-900">
-                            ${(item.unitPriceCents / 100).toFixed(2)}
-                          </td>
-                          <td className="py-3 px-4">
-                            <div className="flex items-center gap-2">
-                              <button
-                                onClick={() =>
-                                  handleUpdateQuantity(
-                                    item.id,
-                                    item.quantity - 1
-                                  )
-                                }
-                                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
-                              >
-                                −
-                              </button>
-                              <span className="w-8 text-center">
-                                {item.quantity}
-                              </span>
-                              <button
-                                onClick={() =>
-                                  handleUpdateQuantity(
-                                    item.id,
-                                    item.quantity + 1
-                                  )
-                                }
-                                className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
-                              >
-                                +
-                              </button>
-                            </div>
-                          </td>
-                          <td className="py-3 px-4 font-semibold text-blue-600">
-                            $
-                            {(
-                              (item.unitPriceCents * item.quantity) /
-                              100
-                            ).toFixed(2)}
-                          </td>
-                          <td className="py-3 px-4">
-                            <button
-                              onClick={() => handleRemoveItem(item.id)}
-                              className="text-red-600 hover:text-red-800 font-medium text-sm"
-                            >
-                              Remove
-                            </button>
-                          </td>
+          {cartItems.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded-lg shadow-sm">
+              <p className="text-gray-600 mb-6">Your cart is empty</p>
+              <Link href="/products">
+                <Button variant="primary">Continue Shopping</Button>
+              </Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Cart Items */}
+              <div className="lg:col-span-2">
+                <Card className="mb-6">
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                            Product
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                            Price
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                            Quantity
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                            Total
+                          </th>
+                          <th className="text-left py-3 px-4 font-semibold text-gray-900">
+                            Action
+                          </th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </Card>
+                      </thead>
+                      <tbody>
+                        {cartItems.map((item) => (
+                          <tr
+                            key={item.id}
+                            className="border-b hover:bg-gray-50"
+                          >
+                            <td className="py-3 px-4">
+                              <div>
+                                <p className="font-medium text-gray-900">
+                                  {item.product.name}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {item.product.sku}
+                                </p>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 text-gray-900">
+                              ${(item.unitPriceCents / 100).toFixed(2)}
+                            </td>
+                            <td className="py-3 px-4">
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() =>
+                                    handleUpdateQuantity(
+                                      item.id,
+                                      item.quantity - 1
+                                    )
+                                  }
+                                  className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
+                                >
+                                  −
+                                </button>
+                                <span className="w-8 text-center">
+                                  {item.quantity}
+                                </span>
+                                <button
+                                  onClick={() =>
+                                    handleUpdateQuantity(
+                                      item.id,
+                                      item.quantity + 1
+                                    )
+                                  }
+                                  className="px-2 py-1 border border-gray-300 rounded hover:bg-gray-100"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4 font-semibold text-blue-600">
+                              $
+                              {(
+                                (item.unitPriceCents * item.quantity) /
+                                100
+                              ).toFixed(2)}
+                            </td>
+                            <td className="py-3 px-4">
+                              <button
+                                onClick={() => handleRemoveItem(item.id)}
+                                className={buttonStyles.dangerLarge}
+                              >
+                                Remove
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
 
-              <div className="flex gap-4">
-                <Link href="/products" className="flex-1">
-                  <Button variant="secondary" fullWidth>
-                    Continue Shopping
-                  </Button>
-                </Link>
+                <div className="flex gap-4">
+                  <Link href="/products" className="flex-1">
+                    <button className={`w-full ${buttonStyles.secondary}`}>
+                      Continue Shopping
+                    </button>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Cart Summary */}
+              <div className="lg:col-span-1">
+                <Card>
+                  <div className="px-6 py-6">
+                    <h2 className="text-xl font-bold text-gray-900 mb-4">
+                      Order Summary
+                    </h2>
+
+                    <div className="space-y-3 mb-6 pb-6 border-b">
+                      <div className="flex justify-between text-gray-600">
+                        <span>Subtotal:</span>
+                        <span>${(subtotalCents / 100).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600">
+                        <span>Shipping:</span>
+                        <span>${(shippingCents / 100).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-gray-600 pl-2 border-l-2 border-gray-300">
+                        <span>GST (5%):</span>
+                        <span>
+                          ${((subtotalCents * 0.05) / 100).toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-gray-600 pl-2 border-l-2 border-gray-300">
+                        <span>QST (9.975%):</span>
+                        <span>
+                          ${((subtotalCents * 0.09975) / 100).toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-gray-600 text-sm pt-2">
+                        <span>Total Tax:</span>
+                        <span>${(taxCents / 100).toFixed(2)}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between text-lg font-bold text-gray-900 mb-6">
+                      <span>Total:</span>
+                      <span className="text-blue-600">
+                        ${(totalCents / 100).toFixed(2)}
+                      </span>
+                    </div>
+
+                    <Link href="/checkout">
+                      <button
+                        disabled={cartItems.length === 0}
+                        className={`w-full ${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed`}
+                      >
+                        Proceed to Checkout
+                      </button>
+                    </Link>
+                  </div>
+                </Card>
               </div>
             </div>
+          )}
+        </div>
+      </div>
 
-            {/* Cart Summary */}
-            <div className="lg:col-span-1">
-              <Card variant="elevated">
-                <h2 className="text-xl font-bold text-gray-900 mb-4">
-                  Order Summary
-                </h2>
-
-                <div className="space-y-3 mb-6 pb-6 border-b">
-                  <div className="flex justify-between text-gray-600">
-                    <span>Subtotal:</span>
-                    <span>${(subtotalCents / 100).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600">
-                    <span>Shipping:</span>
-                    <span>${(shippingCents / 100).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 pl-2 border-l-2 border-gray-300">
-                    <span>GST (5%):</span>
-                    <span>${((subtotalCents * 0.05) / 100).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 pl-2 border-l-2 border-gray-300">
-                    <span>QST (9.975%):</span>
-                    <span>${((subtotalCents * 0.09975) / 100).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 text-sm pt-2">
-                    <span>Total Tax:</span>
-                    <span>${(taxCents / 100).toFixed(2)}</span>
-                  </div>
-                </div>
-
-                <div className="flex justify-between text-lg font-bold text-gray-900 mb-6">
-                  <span>Total:</span>
-                  <span className="text-blue-600">
-                    ${(totalCents / 100).toFixed(2)}
-                  </span>
-                </div>
-
-                <Link href="/checkout">
-                  <Button fullWidth disabled={cartItems.length === 0}>
-                    Proceed to Checkout
-                  </Button>
-                </Link>
-              </Card>
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      </footer>
     </div>
   );
 }

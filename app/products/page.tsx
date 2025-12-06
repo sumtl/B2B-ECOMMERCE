@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { Button, Input } from "@/components/ui";
+import { buttonStyles, footerStyles } from "@/app/ui-styles";
 
 /**
  * Products Page - Main product catalog for buyers
@@ -226,7 +227,7 @@ export default function ProductsPage() {
                   onClick={() => handleClearFilters()}
                   className={`w-full text-left px-3 py-2 rounded-lg transition font-medium text-sm ${
                     !selectedCategory
-                      ? "bg-blue-600 text-white"
+                      ? buttonStyles.primary
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
@@ -239,7 +240,7 @@ export default function ProductsPage() {
                     onClick={() => handleCategorySelect(category.id)}
                     className={`w-full text-left px-3 py-2 rounded-lg transition font-medium text-sm ${
                       selectedCategory === category.id
-                        ? "bg-blue-600 text-white"
+                        ? buttonStyles.primary
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
@@ -384,7 +385,7 @@ export default function ProductsPage() {
                                 fullWidth
                                 size="sm"
                                 onClick={(e) => handleAddToCart(product, e)}
-                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                className={buttonStyles.primary}
                               >
                                 Add to Cart
                               </Button>
@@ -582,7 +583,7 @@ export default function ProductsPage() {
                       <Button
                         onClick={handleAddToCartFromModal}
                         fullWidth
-                        className="bg-blue-600 hover:bg-blue-700 text-white py-3"
+                        className={`${buttonStyles.primary} py-3`}
                       >
                         Add to Cart
                       </Button>
@@ -617,6 +618,28 @@ export default function ProductsPage() {
           </div>
         </div>
       )}
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

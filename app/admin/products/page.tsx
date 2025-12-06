@@ -5,6 +5,12 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Card } from "@/components/ui";
+import {
+  buttonStyles,
+  footerStyles,
+  adminStyles,
+  layoutStyles,
+} from "@/app/ui-styles";
 
 /**
  * Admin Products Management Page(Admin-only)
@@ -103,142 +109,160 @@ export default function AdminProductsPage() {
   if (!isAdmin) return null;
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">
-            Product Management
-          </h1>
-          <Link href="/admin/products/create">
-            <Button className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 font-medium">
-              + Create Product
-            </Button>
-          </Link>
-        </div>
-
-        {loading ? (
-          <div className="text-center py-12 text-gray-600">
-            Loading products...
-          </div>
-        ) : products.length === 0 ? (
-          <Card className="p-8 text-center border border-gray-200 bg-white">
-            <p className="text-gray-600 mb-4">No products yet</p>
+    <div className={layoutStyles.pageWrapper}>
+      <div className={layoutStyles.pageContent}>
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex justify-between items-center mb-8">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Product Management
+            </h1>
             <Link href="/admin/products/create">
-              <Button className="px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 font-medium">
-                Create Your First Product
-              </Button>
+              <Button variant="primary">+ Create Product</Button>
             </Link>
-          </Card>
-        ) : (
-          <div className="overflow-x-auto border border-gray-200 rounded-lg bg-white">
-            <table className="w-full">
-              <thead>
-                <tr className="bg-gray-50 border-b border-gray-200">
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Image
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    SKU
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Name
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Price
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    In Stock
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Low Threshold
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Unit
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold text-gray-900">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {products.map((product) => (
-                  <tr
-                    key={product.id}
-                    className="border-b border-gray-200 hover:bg-gray-50 transition"
-                  >
-                    <td className="px-4 py-3">
-                      <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden flex items-center justify-center">
-                        {product.imageUrl ? (
-                          <img
-                            src={product.imageUrl}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <svg
-                            className="w-6 h-6 text-gray-400"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
-                          </svg>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 font-mono text-sm">
-                      {product.sku}
-                    </td>
-                    <td className="px-4 py-3 max-w-xs">
-                      <div className="font-semibold">{product.name}</div>
-                      {product.description && (
-                        <div
-                          className="text-sm text-gray-500 truncate"
-                          title={product.description}
-                        >
-                          {product.description}
-                        </div>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 font-semibold text-right">
-                      ${(product.priceCents / 100).toFixed(2)}
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      <span
-                        className={
-                          product.platformStock! < product.lowThreshold
-                            ? "text-red-600 font-semibold"
-                            : ""
-                        }
-                      >
-                        {product.platformStock ?? 0}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-center">
-                      {product.lowThreshold}
-                    </td>
-                    <td className="px-4 py-3">{product.unit || "-"}</td>
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <div className="flex gap-2">
-                        <Link href={`/admin/products/${product.id}/edit`}>
-                          <Button className="px-3 py-1.5 bg-gray-700 text-white border border-gray-800 rounded hover:bg-gray-800 text-sm font-medium">
-                            Edit
-                          </Button>
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(product.id)}
-                          className="px-3 py-1.5 bg-red-50 text-red-700 border border-red-200 rounded hover:bg-red-100 text-sm font-medium"
-                        >
-                          Delete
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
-        )}
+
+          {loading ? (
+            <div className="text-center py-12 text-gray-600">
+              Loading products...
+            </div>
+          ) : products.length === 0 ? (
+            <Card className="p-8 text-center border border-gray-200 bg-white">
+              <p className="text-gray-600 mb-4">No products yet</p>
+              <Link href="/admin/products/create">
+                <Button variant="primary">Create Your First Product</Button>
+              </Link>
+            </Card>
+          ) : (
+            <div className={adminStyles.tableContainer}>
+              <table className="w-full">
+                <thead>
+                  <tr className="bg-gray-50 border-b border-gray-200">
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Image
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      SKU
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Name
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Price
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      In Stock
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Low Threshold
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Unit
+                    </th>
+                    <th className="px-4 py-3 text-left font-semibold text-gray-900">
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr
+                      key={product.id}
+                      className="border-b border-gray-200 hover:bg-gray-50 transition"
+                    >
+                      <td className="px-4 py-3">
+                        <div className="w-12 h-12 bg-gray-200 rounded overflow-hidden flex items-center justify-center">
+                          {product.imageUrl ? (
+                            <img
+                              src={product.imageUrl}
+                              alt={product.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <svg
+                              className="w-6 h-6 text-gray-400"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" />
+                            </svg>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-sm">
+                        {product.sku}
+                      </td>
+                      <td className="px-4 py-3 max-w-xs">
+                        <div className="font-semibold">{product.name}</div>
+                        {product.description && (
+                          <div
+                            className="text-sm text-gray-500 truncate"
+                            title={product.description}
+                          >
+                            {product.description}
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-semibold text-right">
+                        ${(product.priceCents / 100).toFixed(2)}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        <span
+                          className={
+                            product.platformStock! < product.lowThreshold
+                              ? "text-red-600 font-semibold"
+                              : ""
+                          }
+                        >
+                          {product.platformStock ?? 0}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {product.lowThreshold}
+                      </td>
+                      <td className="px-4 py-3">{product.unit || "-"}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        <div className="flex gap-2">
+                          <Link href={`/admin/products/${product.id}/edit`}>
+                            <Button variant="secondary">Edit</Button>
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(product.id)}
+                            className={buttonStyles.danger}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }

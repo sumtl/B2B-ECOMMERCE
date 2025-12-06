@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Card, Button } from "@/components/ui";
+import { adminStyles } from "@/app/ui-styles";
 
 /**
  * Admin Dashboard (Admin-only)
@@ -79,12 +80,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className={adminStyles.contentContainer}>
         <h1 className="text-4xl font-bold mb-8 text-gray-900">
           Admin Dashboard
         </h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={adminStyles.grid2}>
           {/* Products Management */}
           <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
             <h2 className="text-2xl font-bold mb-2 text-gray-900">
@@ -94,14 +95,14 @@ export default function AdminDashboard() {
               Create, edit, and delete products. Manage prices and inventory.
             </p>
             <Link href="/admin/products">
-              <Button className="w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 font-medium">
+              <Button variant="primary" fullWidth>
                 Manage Products
               </Button>
             </Link>
           </Card>
 
           {/* Categories Management */}
-          <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
+          <Card className={adminStyles.cardHover}>
             <h2 className="text-2xl font-bold mb-2 text-gray-900">
               Category Management
             </h2>
@@ -109,7 +110,7 @@ export default function AdminDashboard() {
               Create, edit, and delete product categories.
             </p>
             <Link href="/admin/categories">
-              <Button className="w-full px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 font-medium">
+              <Button variant="primary" fullWidth>
                 Manage Categories
               </Button>
             </Link>
@@ -121,10 +122,7 @@ export default function AdminDashboard() {
             <p className="text-gray-600 mb-4">
               View sales reports, inventory status, and analytics.
             </p>
-            <Button
-              className="w-full px-4 py-2 bg-gray-200 text-gray-500 rounded cursor-not-allowed"
-              disabled
-            >
+            <Button variant="secondary" fullWidth disabled>
               Coming Soon
             </Button>
           </Card>
@@ -137,10 +135,7 @@ export default function AdminDashboard() {
             <p className="text-gray-600 mb-4">
               Configure platform settings and user permissions.
             </p>
-            <Button
-              className="w-full px-4 py-2 bg-gray-200 text-gray-500 rounded cursor-not-allowed"
-              disabled
-            >
+            <Button variant="secondary" fullWidth disabled>
               Coming Soon
             </Button>
           </Card>
