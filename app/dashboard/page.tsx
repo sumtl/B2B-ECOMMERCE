@@ -340,7 +340,7 @@ export default function DashboardPage() {
                     type="submit"
                     disabled={saving}
                     variant="primary"
-                    fullWidth
+                    className="flex-1"
                   >
                     {saving ? "Saving..." : "Save Changes"}
                   </Button>
@@ -348,7 +348,7 @@ export default function DashboardPage() {
                     type="button"
                     onClick={() => setEditing(false)}
                     variant="secondary"
-                    fullWidth
+                    className="flex-1"
                   >
                     Cancel
                   </Button>
