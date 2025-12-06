@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth, useClerk } from "@clerk/nextjs";
 import { Button, Input } from "@/components/ui";
-import { buttonStyles, footerStyles } from "@/app/ui-styles";
+import { footerStyles } from "@/app/ui-styles";
 
 /**
  * Products Page - Main product catalog for buyers
@@ -227,7 +227,7 @@ export default function ProductsPage() {
                   onClick={() => handleClearFilters()}
                   className={`w-full text-left px-3 py-2 rounded-lg transition font-medium text-sm ${
                     !selectedCategory
-                      ? buttonStyles.primary
+                      ? "px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
@@ -240,7 +240,7 @@ export default function ProductsPage() {
                     onClick={() => handleCategorySelect(category.id)}
                     className={`w-full text-left px-3 py-2 rounded-lg transition font-medium text-sm ${
                       selectedCategory === category.id
-                        ? buttonStyles.primary
+                        ? "px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                         : "text-gray-700 hover:bg-gray-100"
                     }`}
                   >
@@ -385,7 +385,7 @@ export default function ProductsPage() {
                                 fullWidth
                                 size="sm"
                                 onClick={(e) => handleAddToCart(product, e)}
-                                className={buttonStyles.primary}
+                                className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                               >
                                 Add to Cart
                               </Button>
@@ -583,7 +583,7 @@ export default function ProductsPage() {
                       <Button
                         onClick={handleAddToCartFromModal}
                         fullWidth
-                        className={`${buttonStyles.primary} py-3`}
+                        className="px-4 py-3 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                       >
                         Add to Cart
                       </Button>

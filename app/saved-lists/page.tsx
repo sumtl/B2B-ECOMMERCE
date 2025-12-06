@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
-import { buttonStyles, footerStyles, layoutStyles } from "@/app/ui-styles";
+import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Saved Lists Page - Manage saved product lists
@@ -204,7 +204,9 @@ export default function SavedListsPage() {
               You need to sign in to view your saved lists
             </p>
             <SignInButton mode="modal">
-              <button className={buttonStyles.primary}>Sign In Now</button>
+              <button className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors">
+                Sign In Now
+              </button>
             </SignInButton>
           </div>
         </div>
@@ -222,12 +224,15 @@ export default function SavedListsPage() {
               {!showCreateForm && (
                 <button
                   onClick={() => setShowCreateForm(true)}
-                  className={buttonStyles.primary}
+                  className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                 >
                   Create New List
                 </button>
               )}
-              <Link href="/cart" className={buttonStyles.primary}>
+              <Link
+                href="/cart"
+                className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
+              >
                 Cart
               </Link>
             </div>
@@ -254,13 +259,13 @@ export default function SavedListsPage() {
               <div className="flex gap-2">
                 <button
                   onClick={handleCreateList}
-                  className={buttonStyles.primary}
+                  className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                 >
                   Create
                 </button>
                 <button
                   onClick={() => setShowCreateForm(false)}
-                  className={buttonStyles.secondary}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors"
                 >
                   Cancel
                 </button>
@@ -295,13 +300,13 @@ export default function SavedListsPage() {
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleOrderFromList(list.id)}
-                        className={buttonStyles.primary}
+                        className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
                       >
                         Order From List
                       </button>
                       <button
                         onClick={() => handleDeleteList(list.id)}
-                        className={buttonStyles.danger}
+                        className="px-3 py-1 bg-red-600 text-white hover:bg-red-700 rounded text-sm font-medium transition-colors"
                       >
                         Delete
                       </button>
@@ -423,13 +428,13 @@ export default function SavedListsPage() {
                               !addItemProductId ||
                               availableProducts.length === 0
                             }
-                            className={`flex-1 ${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed`}
+                            className="flex-1 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Add to List
                           </button>
                           <button
                             onClick={() => setSelectedListForAddItem(null)}
-                            className={`flex-1 ${buttonStyles.secondary}`}
+                            className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors"
                           >
                             Cancel
                           </button>

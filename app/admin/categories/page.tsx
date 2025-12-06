@@ -5,12 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Card } from "@/components/ui";
-import {
-  buttonStyles,
-  footerStyles,
-  adminStyles,
-  layoutStyles,
-} from "@/app/ui-styles";
+import { footerStyles, adminStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Admin Categories Management Page(Admin Only)
@@ -138,7 +133,7 @@ export default function AdminCategoriesPage() {
                       </Link>
                       <button
                         onClick={() => handleDelete(category.id)}
-                        className={buttonStyles.danger}
+                        className="px-3 py-1 bg-red-600 text-white hover:bg-red-700 rounded text-sm font-medium transition-colors"
                       >
                         Delete
                       </button>

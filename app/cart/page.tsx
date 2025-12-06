@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import { Button, Card } from "@/components/ui";
 import { calculateOrderTotal } from "@/lib/utils";
-import { footerStyles, buttonStyles, layoutStyles } from "@/app/ui-styles";
+import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Cart Page - Shopping cart management(buyer-only)
@@ -264,7 +264,7 @@ export default function CartPage() {
                             <td className="py-3 px-4">
                               <button
                                 onClick={() => handleRemoveItem(item.id)}
-                                className={buttonStyles.dangerLarge}
+                                className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded font-medium transition-colors"
                               >
                                 Remove
                               </button>
@@ -278,7 +278,7 @@ export default function CartPage() {
 
                 <div className="flex gap-4">
                   <Link href="/products" className="flex-1">
-                    <button className={`w-full ${buttonStyles.secondary}`}>
+                    <button className="w-full px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors">
                       Continue Shopping
                     </button>
                   </Link>
@@ -330,7 +330,7 @@ export default function CartPage() {
                     <Link href="/checkout">
                       <button
                         disabled={cartItems.length === 0}
-                        className={`w-full ${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed`}
+                        className="w-full px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         Proceed to Checkout
                       </button>

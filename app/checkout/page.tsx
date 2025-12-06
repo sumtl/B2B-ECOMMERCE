@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth, SignInButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { calculateOrderTotal } from "@/lib/utils";
-import { buttonStyles, footerStyles, layoutStyles } from "@/app/ui-styles";
+import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Checkout Page - Order confirmation and payment(buyer-only)
@@ -282,13 +282,13 @@ export default function CheckoutPage() {
                   <button
                     onClick={handlePlaceOrder}
                     disabled={submitting || cartItems.length === 0}
-                    className={`w-full ${buttonStyles.primary} font-semibold disabled:opacity-50 disabled:cursor-not-allowed`}
+                    className="w-full px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? "Placing Order..." : "Place Order"}
                   </button>
 
                   <Link href="/cart">
-                    <button className={`w-full mt-3 ${buttonStyles.secondary}`}>
+                    <button className="w-full mt-3 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors">
                       Back to Cart
                     </button>
                   </Link>

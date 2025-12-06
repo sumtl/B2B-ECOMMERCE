@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth, SignInButton } from "@clerk/nextjs";
-import { buttonStyles, footerStyles, layoutStyles } from "@/app/ui-styles";
+import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
  * Orders Page - Buyer's order history and details(buyer-only)
@@ -168,7 +168,10 @@ export default function OrdersPage() {
         <div className="max-w-6xl mx-auto px-4 py-8">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">Order History</h1>
-            <Link href="/products" className={buttonStyles.primary}>
+            <Link
+              href="/products"
+              className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
+            >
               Continue Shopping
             </Link>
           </div>
@@ -241,7 +244,7 @@ export default function OrdersPage() {
                         <button
                           onClick={() => handlePayOrder(order.id)}
                           disabled={actioningOrderId === order.id}
-                          className={`${buttonStyles.primary} disabled:opacity-50 disabled:cursor-not-allowed text-sm`}
+                          className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                         >
                           {actioningOrderId === order.id && actionType === "pay"
                             ? "Processing..."
@@ -250,7 +253,7 @@ export default function OrdersPage() {
                         <button
                           onClick={() => handleCancelOrder(order.id)}
                           disabled={actioningOrderId === order.id}
-                          className={`${buttonStyles.dangerLarge} disabled:opacity-50 disabled:cursor-not-allowed`}
+                          className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {actioningOrderId === order.id &&
                           actionType === "cancel"
