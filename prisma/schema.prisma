@@ -149,6 +149,11 @@ model Order {
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 
+  // Stripe integration fields
+  paymentStatus   String?     // "PAID", "PAYMENT_FAILED", etc.
+  paymentIntentId String?     // Stripe PaymentIntent ID for tracking
+  paidAt          DateTime?   // Timestamp when payment succeeded
+
   lines OrderLine[]
 
   // optional back-reference to the Cart that produced this Order
