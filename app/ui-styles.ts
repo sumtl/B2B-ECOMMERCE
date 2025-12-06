@@ -43,24 +43,11 @@ export const buttonStyles = {
   // Use for: Checkout, Add to Cart, Submit, Create, Save, Order, Place Order, etc.
   primary:
     "px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors",
-  primaryLarge:
-    "px-6 py-3 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors",
-  primarySmall:
-    "px-3 py-1 bg-black hover:bg-gray-800 text-white rounded text-sm font-medium transition-colors",
 
   // SECONDARY: Less important actions - Gray solid background with black text
   // Use for: Back, Cancel, Continue Shopping, View Details, Close
   secondary:
     "px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors",
-  secondaryLarge:
-    "px-6 py-3 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors",
-  secondarySmall:
-    "px-3 py-1 bg-gray-200 hover:bg-gray-300 text-black rounded text-sm font-medium transition-colors",
-
-  // SECONDARY OUTLINE: Alternative secondary - Gray border with optional text
-  // Use for: Alternative actions, less emphasis
-  secondaryOutline:
-    "px-4 py-2 border border-gray-300 text-gray-700 hover:bg-gray-50 rounded font-medium transition-colors",
 
   // DANGER: Destructive actions - Red solid background
   // Use for: Delete, Remove from cart, Cancel order, Remove from list
@@ -83,7 +70,6 @@ export const footerStyles = {
 
 // Admin Dashboard & Management Pages
 export const adminStyles = {
-  pageContainer: "min-h-screen bg-white flex flex-col",
   contentContainer: "flex-grow max-w-7xl mx-auto w-full px-4 py-8",
 
   // Grid layouts with proper spacing
@@ -91,14 +77,9 @@ export const adminStyles = {
   grid3: "grid grid-cols-1 md:grid-cols-3 gap-6",
 
   // Card styles with clear border and hover effect
-  card: "bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow",
   cardHover:
     "bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow",
 
   // Table container
   tableContainer: "overflow-x-auto border border-gray-200 rounded-lg",
-
-  // Section headers
-  sectionHeader: "flex justify-between items-center mb-8",
-  sectionTitle: "text-4xl font-bold text-gray-900",
 };
