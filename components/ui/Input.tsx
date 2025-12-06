@@ -1,35 +1,20 @@
-import React from "react";
+import * as React from "react";
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label?: string;
-  error?: string;
-  helperText?: string;
-}
+import { cn } from "@/lib/utils";
 
-export default function Input({
-  label,
-  error,
-  helperText,
-  className = "",
-  ...props
-}: InputProps) {
+function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
-    <div className="w-full">
-      {label && (
-        <label className="block text-sm font-medium text-gray-900 mb-2">
-          {label}
-        </label>
+    <input
+      type={type}
+      data-slot="input"
+      className={cn(
+        "h-9 w-full rounded border border-gray-200 bg-white px-3 py-2 text-base placeholder:text-gray-400 transition-[color,box-shadow] outline-none disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+        "focus-visible:border-black focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-0",
+        className
       )}
-      <input
-        className={`w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base disabled:bg-gray-100 disabled:cursor-not-allowed transition-colors ${
-          error ? "border-red-500 focus:ring-red-500" : ""
-        } ${className}`}
-        {...props}
-      />
-      {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
-      {helperText && !error && (
-        <p className="mt-1 text-sm text-gray-500">{helperText}</p>
-      )}
-    </div>
+      {...props}
+    />
   );
 }
+
+export { Input };
