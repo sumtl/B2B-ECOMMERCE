@@ -108,6 +108,9 @@ async function seedOrders() {
             24960
         ),
         notes: "Safety equipment order - team PPE package",
+        paymentStatus: "PAID",
+        paymentIntentId: "pi_seed_order2_safety_equipment",
+        paidAt: new Date("2024-12-02T15:30:00Z"),
         lines: {
           create: [
             {
@@ -206,6 +209,9 @@ async function seedOrders() {
               7095
           ),
           notes: "Generator and lumber supply for field setup",
+          paymentStatus: "PAID",
+          paymentIntentId: "pi_seed_order4_generator_lumber",
+          paidAt: new Date("2024-12-01T09:15:00Z"),
           lines: {
             create: [
               {
