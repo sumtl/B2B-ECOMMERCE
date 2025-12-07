@@ -1,0 +1,278 @@
+### 1. Open http://localhost:3000 in browser and sign in
+### 2. Open DevTools (F12) → Console tab
+### 3. Copy & paste this code:
+###    window.Clerk?.session?.getToken().then(t => { console.log(t) })
+### 4. Copy the output token (the long string)
+### 5. Replace the @token value below
+### 6. Test immediately (token has 60 second expiration)
+
+@baseUrl = http://localhost:3000
+@token = your token here
+# ============================================
+# PRODUCTS API
+# ============================================
+
+### Get All Products (Public - No Auth Required)
+GET {{baseUrl}}/api/products?page=1&limit=12
+
+### Get Products with Category Filter
+GET {{baseUrl}}/api/products?page=1&limit=12&category=electronics 
+
+### Get Products by Search(category or name or description)
+GET {{baseUrl}}/api/products?page=1&limit=12&search=power
+
+# ============================================
+# CART API
+# ============================================
+
+### Get Current User's Cart
+GET {{baseUrl}}/api/cart  
+Authorization: Bearer {{token}}
+
+### Add Item to Cart
+POST {{baseUrl}}/api/cart/items  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "your_product_id_here",
+  "quantity": 2
+}
+
+### Update Cart Item Quantity (Replace cartItem_id)
+PATCH {{baseUrl}}/api/cart/items/cartItem_id  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "quantity": 5
+}
+
+### Remove Item from Cart (Replace cartItem_id)
+DELETE {{baseUrl}}/api/cart/items/cartItem_id  
+Authorization: Bearer {{token}}
+
+# ============================================
+# ORDERS API
+# ============================================
+
+### Get All Orders for Current User
+GET {{baseUrl}}/api/orders  
+Authorization: Bearer {{token}}
+
+### Get Order Details (Replace order_id)
+GET {{baseUrl}}/api/orders/order_id  
+Authorization: Bearer {{token}}
+
+### Get Order Payment Status (Replace order_id)
+GET {{baseUrl}}/api/orders/order_id/payment-status  
+Authorization: Bearer {{token}}
+
+# ============================================
+# CHECKOUT API
+# ============================================
+
+### Create Checkout Session (Replace order_id with real order ID from GET /api/orders)
+POST {{baseUrl}}/api/checkout/session  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "orderId": "order_id_here"
+}
+
+# ============================================
+# SAVED LISTS API
+# ============================================
+
+### Get All Saved Lists
+GET {{baseUrl}}/api/saved-lists  
+Authorization: Bearer {{token}}
+
+### Create New Saved List
+POST {{baseUrl}}/api/saved-lists  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Monthly Office Supplies",
+  "description": "Regular products for office use"
+}
+
+### Add Product to Saved List (Replace list_id and product_id)
+POST {{baseUrl}}/api/saved-lists/list_id/items  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "product_id",
+  "quantity": 10
+}
+
+### Remove Item from Saved List (Replace list_id and item_id)
+DELETE {{baseUrl}}/api/saved-lists/list_id/items/item_id  
+Authorization: Bearer {{token}}
+
+### Convert Saved List to Cart (Replace list_id)
+POST {{baseUrl}}/api/saved-lists/list_id/order  
+Authorization: Bearer {{token}}
+
+### Delete Saved List (Replace list_id)
+DELETE {{baseUrl}}/api/saved-lists/list_id  
+Authorization: Bearer {{token}}
+
+# ============================================
+# COMPLETE WORKFLOW EXAMPLE
+# ============================================
+
+### Step 1: Get Products List
+GET {{baseUrl}}/api/products?page=1&limit=5  
+
+### Step 2: Get Cart (should be empty for new user)
+GET {{baseUrl}}/api/cart  
+Authorization: Bearer {{token}}
+
+### Step 3: Add Product to Cart (first get a real product_id from Step 1)
+POST {{baseUrl}}/api/cart/items  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "productId": "insert_product_id_from_step1",
+  "quantity": 3
+}
+
+### Step 4: View Cart Again (should now contain items)
+GET {{baseUrl}}/api/cart  
+Authorization: Bearer {{token}}
+
+### Step 5: Get All Orders
+GET {{baseUrl}}/api/orders  
+Authorization: Bearer {{token}}
+
+# ============================================
+# SAVED LISTS WORKFLOW
+# ============================================
+
+### Create a Saved List for Testing
+POST {{baseUrl}}/api/saved-lists  
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Test List",
+  "description": "Testing saved lists feature"
+}
+
+### Get Saved Lists (copy the ID from response for next steps)
+GET {{baseUrl}}/api/saved-lists  
+Authorization: Bearer {{token}}
+
+# ============================================
+# ADMIN ENDPOINTS - PRODUCTS
+# ============================================
+
+### Admin: Create Product
+POST {{baseUrl}}/api/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sku": "TEST-PROD-001",
+  "name": "Test Product",
+  "description": "A test product for API testing",
+  "priceCents": 9999,
+  "unit": "piece",
+  "categoryId": "category_id_here",
+  "initialStock": 50
+}
+
+### Admin: Get Product Details (Replace product_id)
+GET {{baseUrl}}/api/products/product_id
+Authorization: Bearer {{token}}
+
+### Admin: Update Product (Replace product_id)
+PUT {{baseUrl}}/api/products/product_id
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Product Name",
+  "description": "Updated description",
+  "priceCents": 12999,
+  "unit": "box"
+}
+
+### Admin: Delete Product (Replace product_id)
+DELETE {{baseUrl}}/api/products/product_id
+Authorization: Bearer {{token}}
+
+# ============================================
+# ADMIN ENDPOINTS - CATEGORIES
+# ============================================
+
+### Admin: Create Category
+POST {{baseUrl}}/api/categories
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Test Category",
+  "slug": "test-category",
+  "icon": "📦"
+}
+
+### Admin: Get Category Details (Replace category_id)
+GET {{baseUrl}}/api/categories/category_id
+Authorization: Bearer {{token}}
+
+### Admin: Update Category (Replace category_id)
+PUT {{baseUrl}}/api/categories/category_id
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated Category Name",
+  "slug": "updated-category",
+  "icon": "🏷️"
+}
+
+### Admin: Delete Category (Replace category_id)
+DELETE {{baseUrl}}/api/categories/category_id
+Authorization: Bearer {{token}}
+
+# ============================================
+# ORDERS - CREATE & CANCEL
+# ============================================
+
+### Create Order from Cart (Replace order_id in checkout, or create from cart items)
+POST {{baseUrl}}/api/orders
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "poNumber": "PO-2024-001",
+  "notes": "Rush delivery requested"
+}
+
+### Cancel Order (Replace order_id)
+DELETE {{baseUrl}}/api/orders/order_id
+Authorization: Bearer {{token}}
+
+# ============================================
+# SAVED LISTS - EDIT & CONVERT
+# ============================================
+
+### Edit Saved List (Replace list_id)
+PUT {{baseUrl}}/api/saved-lists/list_id
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Updated List Name",
+  "description": "Updated description for the list"
+}
+
+### Convert Saved List to Order (Replace list_id)
+POST {{baseUrl}}/api/saved-lists/list_id/order
+Authorization: Bearer {{token}}
