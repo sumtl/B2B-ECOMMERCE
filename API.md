@@ -30,23 +30,30 @@ All available API endpoints.
 
 ## Orders
 - `GET /api/orders` - **Protected**
+- `GET /api/orders/[id]` - **Protected** (fetch order details)
 - `POST /api/orders` - **Protected** (create from cart)
-- `POST /api/orders/[id]/pay` - **Protected** (mark as paid)
 - `DELETE /api/orders/[id]` - **Protected** (cancel order)
+
+## Checkout & Payment
+- `POST /api/checkout/session` - **Protected** (create Stripe Checkout Session)
+- `GET /api/orders/[id]/payment-status` - **Protected** (check payment status from Stripe)
 
 ## Saved Lists
 - `GET /api/saved-lists` - **Protected**
 - `GET /api/saved-lists/[id]` - **Protected**
-- `POST /api/saved-lists` - **Protected** (create)
-- `PUT /api/saved-lists/[id]` - **Protected** (update)
-- `DELETE /api/saved-lists/[id]` - **Protected**
-- `POST /api/saved-lists/[id]/order` - **Protected** (convert to order)
+- `POST /api/saved-lists` - **Protected** (create list)
+- `PUT /api/saved-lists/[id]` - **Protected** (update list)
+- `DELETE /api/saved-lists/[id]` - **Protected** (delete list)
+- `POST /api/saved-lists/[id]/items` - **Protected** (add item to list)
+- `DELETE /api/saved-lists/[id]/items/[itemId]` - **Protected** (remove item from list)
+- `POST /api/saved-lists/[id]/order` - **Protected** (convert list to order)
 
 ## Admin
 - `GET /api/admin/stats` - **Admin only**
 
 ## Webhooks
-- `POST /api/webhooks/clerk` - Webhook (Clerk signature verification)
+- `POST /api/webhooks/clerk` - Webhook (Clerk signature verification, handles user.created, user.updated, user.deleted)
+- `POST /api/webhooks/stripe` - Webhook (Stripe signature verification, handles checkout.session.completed, checkout.session.expired, checkout.session.async_payment_succeeded, checkout.session.async_payment_failed)
 
 ## Legend
 - **Public** - No authentication required
