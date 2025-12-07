@@ -36,11 +36,11 @@ export const homePageStyles = {
 
 // Footer
 export const footerStyles = {
-  container: "mt-auto border-t border-gray-100 bg-white py-12",
-  title: "text-xl font-bold text-gray-900",
-  subtitle: "text-sm text-gray-500 mt-1",
-  copyright: "text-sm text-gray-500",
-  tagline: "text-xs text-gray-400 mt-1",
+  container: "mt-auto border-t border-gray-100 bg-white py-4",
+  title: "text-base font-bold text-gray-900",
+  subtitle: "text-xs text-gray-500 mt-0",
+  copyright: "text-xs text-gray-500",
+  tagline: "text-xs text-gray-400 mt-0",
 };
 
 // Admin Dashboard & Management Pages
