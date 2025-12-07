@@ -11,6 +11,7 @@ const updateProductSchema = z.object({
   priceCents: z.number().int().positive().optional(),
   unit: z.string().optional(),
   lowThreshold: z.number().int().nonnegative().optional(),
+  currentStock: z.number().int().nonnegative().optional(),
   categoryId: z.string().optional().nullable(),
   imageUrl: z.string().url().optional().nullable(), // Product image URL
 });
@@ -41,7 +42,13 @@ export async function GET(
       return jsonError("Product not found", 404);
     }
 
-    return NextResponse.json({ success: true, product }, { status: 200 });
+    // Calculate current stock from inventory
+    const currentStock = product.inventories[0]?.quantity || 0;
+
+    return NextResponse.json(
+      { success: true, product: { ...product, currentStock } },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("GET /api/products/[id] error:", error);
     return jsonError("Failed to fetch product", 500);
@@ -73,14 +80,41 @@ export async function PUT(
     // Check if product exists
     const existingProduct = await prisma.product.findUnique({
       where: { id },
+      include: {
+        inventories: {
+          where: { ownerType: "PLATFORM" },
+        },
+      },
     });
 
     if (!existingProduct) {
       return jsonError("Product not found", 404);
     }
 
+    const { currentStock, ...productData } = parsed.data;
+
+    // Update inventory if currentStock is provided
+    if (currentStock !== undefined) {
+      const inventory = existingProduct.inventories[0];
+      if (inventory) {
+        await prisma.inventory.update({
+          where: { id: inventory.id },
+          data: { quantity: currentStock },
+        });
+      } else {
+        // Create inventory if it doesn't exist
+        await prisma.inventory.create({
+          data: {
+            productId: id,
+            ownerType: "PLATFORM",
+            quantity: currentStock,
+          },
+        });
+      }
+    }
+
     const updateData = Object.fromEntries(
-      Object.entries(parsed.data).filter(([, v]) => v !== undefined)
+      Object.entries(productData).filter(([, v]) => v !== undefined)
     );
 
     const product = await prisma.product.update({
@@ -88,10 +122,19 @@ export async function PUT(
       data: updateData,
       include: {
         category: true,
+        inventories: {
+          where: { ownerType: "PLATFORM" },
+          select: { quantity: true },
+        },
       },
     });
 
-    return NextResponse.json({ success: true, data: product }, { status: 200 });
+    const finalCurrentStock = product.inventories[0]?.quantity || 0;
+
+    return NextResponse.json(
+      { success: true, data: { ...product, currentStock: finalCurrentStock } },
+      { status: 200 }
+    );
   } catch (error: unknown) {
     console.error("PUT /api/products/[id] error:", error);
     const err = error as { message?: string };

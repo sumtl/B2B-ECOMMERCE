@@ -23,6 +23,7 @@ interface Product {
   lowThreshold: number;
   categoryId: string | null;
   imageUrl: string | null;
+  currentStock?: number;
 }
 
 export default function EditProductPage() {
@@ -44,6 +45,7 @@ export default function EditProductPage() {
     lowThreshold: "0",
     categoryId: "",
     imageUrl: "",
+    currentStock: "0",
   });
 
   const [loading, setLoading] = useState(true);
@@ -100,6 +102,7 @@ export default function EditProductPage() {
           lowThreshold: String(product.lowThreshold),
           categoryId: product.categoryId || "",
           imageUrl: product.imageUrl || "",
+          currentStock: String(product.currentStock || 0),
         });
 
         // Set image preview if exists
@@ -197,6 +200,7 @@ export default function EditProductPage() {
         priceCents: parseInt(formData.priceCents, 10),
         unit: formData.unit || undefined,
         lowThreshold: parseInt(formData.lowThreshold, 10),
+        currentStock: parseInt(formData.currentStock, 10),
         categoryId: formData.categoryId || null,
         imageUrl: formData.imageUrl || null,
       };
@@ -437,6 +441,25 @@ export default function EditProductPage() {
               />
               <p className="text-xs text-gray-500 mt-1">
                 Alert when inventory falls below this level
+              </p>
+            </div>
+
+            {/* Current Stock */}
+            <div>
+              <label className="block text-sm font-semibold mb-2">
+                Current Stock (In Stock)
+              </label>
+              <Input
+                type="number"
+                name="currentStock"
+                value={formData.currentStock}
+                onChange={handleChange}
+                placeholder="0"
+                min="0"
+                step="1"
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Update inventory quantity. Set to 0 if out of stock.
               </p>
             </div>
 
