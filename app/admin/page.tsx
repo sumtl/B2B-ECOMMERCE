@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Card, Button } from "@/components/ui";
-import { adminStyles } from "@/app/ui-styles";
+import { adminStyles, footerStyles } from "@/app/ui-styles";
 
 /**
  * Admin Dashboard (Admin-only)
@@ -87,45 +87,47 @@ export default function AdminDashboard() {
 
         <div className={adminStyles.grid2}>
           {/* Products Management */}
-          <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition">
-            <h2 className="text-2xl font-bold mb-2 text-gray-900">
-              Product Management
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Create, edit, and delete products. Manage prices and inventory.
-            </p>
-            <Link href="/admin/products">
+          <Link href="/admin/products" className="no-underline">
+            <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition cursor-pointer h-full">
+              <h2 className="text-2xl font-bold mb-2 text-gray-900">
+                Product Management
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Create, edit, and delete products. Manage prices and inventory.
+              </p>
               <Button variant="primary" fullWidth>
                 Manage Products
               </Button>
-            </Link>
-          </Card>
+            </Card>
+          </Link>
 
           {/* Categories Management */}
-          <Card className={adminStyles.cardHover}>
-            <h2 className="text-2xl font-bold mb-2 text-gray-900">
-              Category Management
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Create, edit, and delete product categories.
-            </p>
-            <Link href="/admin/categories">
+          <Link href="/admin/categories" className="no-underline">
+            <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition cursor-pointer h-full">
+              <h2 className="text-2xl font-bold mb-2 text-gray-900">
+                Category Management
+              </h2>
+              <p className="text-gray-600 mb-4">
+                Create, edit, and delete product categories.
+              </p>
               <Button variant="primary" fullWidth>
                 Manage Categories
               </Button>
-            </Link>
-          </Card>
+            </Card>
+          </Link>
 
-          {/* Reports (placeholder) */}
-          <Card className="p-6 border border-gray-200 bg-white opacity-50 cursor-not-allowed">
-            <h2 className="text-2xl font-bold mb-2 text-gray-900">Reports</h2>
-            <p className="text-gray-600 mb-4">
-              View sales reports, inventory status, and analytics.
-            </p>
-            <Button variant="secondary" fullWidth disabled>
-              Coming Soon
-            </Button>
-          </Card>
+          {/* Reports */}
+          <Link href="/admin/reports" className="no-underline">
+            <Card className="p-6 border border-gray-200 bg-white hover:shadow-md transition cursor-pointer h-full">
+              <h2 className="text-2xl font-bold mb-2 text-gray-900">Reports</h2>
+              <p className="text-gray-600 mb-4">
+                View inventory alerts and order statistics.
+              </p>
+              <Button variant="primary" fullWidth>
+                View Reports
+              </Button>
+            </Card>
+          </Link>
 
           {/* System Settings (placeholder) */}
           <Card className="p-6 border border-gray-200 bg-white opacity-50 cursor-not-allowed">
@@ -167,6 +169,28 @@ export default function AdminDashboard() {
           </Card>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className={footerStyles.container}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <div className="mb-6 md:mb-0">
+              <h3 className={footerStyles.title}>B2B Commerce</h3>
+              <p className={footerStyles.subtitle}>
+                Professional Procurement Platform
+              </p>
+            </div>
+            <div className="text-center md:text-right">
+              <p className={footerStyles.copyright}>
+                © 2025 B2B Commerce. All rights reserved.
+              </p>
+              <p className={footerStyles.tagline}>
+                Streamlining business procurement
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
