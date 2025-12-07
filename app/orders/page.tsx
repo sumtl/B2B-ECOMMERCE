@@ -70,33 +70,34 @@ export default function OrdersPage() {
   };
 
   const handlePayOrder = async (orderId: string) => {
-    if (!window.confirm("Confirm payment for this order?")) return;
-
     setActioningOrderId(orderId);
     setActionType("pay");
     setActionError(null);
 
     try {
-      // POST /api/orders/[id]/pay - Mark order as paid (CREATED → PAID)
-      const res = await fetch(`/api/orders/${orderId}/pay`, {
+      // POST /api/checkout/session - Create Stripe Checkout Session
+      const res = await fetch("/api/checkout/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || "Failed to process payment");
+        throw new Error(data.error || "Failed to create checkout session");
       }
 
-      // Refresh orders list
-      fetchOrders(page);
-      alert("Payment processed successfully!");
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
     } catch (err) {
       const message =
-        err instanceof Error ? err.message : "Failed to process payment";
+        err instanceof Error ? err.message : "Failed to initiate payment";
       setActionError(message);
-    } finally {
       setActioningOrderId(null);
       setActionType(null);
     }
@@ -183,7 +184,14 @@ export default function OrdersPage() {
           ) : (
             <div className="space-y-4">
               {orders.map((order) => (
-                <div key={order.id} className="bg-white rounded-lg shadow p-6">
+                <div
+                  key={order.id}
+                  className="bg-white rounded-lg shadow p-6 cursor-pointer hover:shadow-lg hover:bg-gray-50 transition-all"
+                  onClick={() => {
+                    // Navigate to order detail page on card click
+                    window.location.href = `/orders/${order.id}`;
+                  }}
+                >
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-lg font-semibold">
@@ -242,7 +250,10 @@ export default function OrdersPage() {
                     {order.status === "CREATED" && (
                       <>
                         <button
-                          onClick={() => handlePayOrder(order.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handlePayOrder(order.id);
+                          }}
                           disabled={actioningOrderId === order.id}
                           className="px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                         >
@@ -251,7 +262,10 @@ export default function OrdersPage() {
                             : "Pay Now"}
                         </button>
                         <button
-                          onClick={() => handleCancelOrder(order.id)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancelOrder(order.id);
+                          }}
                           disabled={actioningOrderId === order.id}
                           className="px-4 py-2 bg-red-600 text-white hover:bg-red-700 rounded font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >

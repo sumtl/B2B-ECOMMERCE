@@ -7,9 +7,8 @@ import { calculateOrderTotal } from "@/lib/utils";
 import { footerStyles, layoutStyles } from "@/app/ui-styles";
 
 /**
- * Checkout Page - Order confirmation and payment(buyer-only)
- * Review cart items, enter buyer info, calculate taxes, place order
- * Stripe payment integration(TODO)
+ * Checkout Page - Order confirmation and payment (buyer-only)
+ * Two-stage workflow: order summary → payment form
  */
 
 interface CartItem {
@@ -51,7 +50,6 @@ export default function CheckoutPage() {
 
     const fetchCart = async () => {
       try {
-        // GET /api/cart - Fetch cart items for checkout review
         const res = await fetch("/api/cart");
         if (!res.ok) {
           throw new Error("Failed to fetch cart");
@@ -80,7 +78,7 @@ export default function CheckoutPage() {
     setError(null);
 
     try {
-      // POST /api/orders - Create order from cart with buyer info and tax calculation
+      // Step 1: Create order
       const res = await fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,14 +94,31 @@ export default function CheckoutPage() {
         throw new Error(data.error || "Failed to create order");
       }
 
-      // Success - redirect to orders page where user can pay
-      alert(
-        "Order created successfully! You can pay from your Order History page."
-      );
-      window.location.href = "/orders";
+      const orderId = data.data.id;
+
+      // Step 2: Create Stripe Checkout Session and redirect
+      const sessionRes = await fetch("/api/checkout/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const sessionData = await sessionRes.json();
+
+      if (!sessionRes.ok) {
+        throw new Error(
+          sessionData.error || "Failed to create checkout session"
+        );
+      }
+
+      // Step 3: Redirect to Stripe Hosted Checkout
+      if (sessionData.url) {
+        window.location.href = sessionData.url;
+      } else {
+        throw new Error("No checkout URL returned");
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to place order");
-    } finally {
       setSubmitting(false);
     }
   };
@@ -166,8 +181,9 @@ export default function CheckoutPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Order Items */}
+              {/* Order Items and Details */}
               <div className="lg:col-span-2">
+                {/* Order Items */}
                 <div className="bg-white rounded-lg shadow p-6 mb-6">
                   <h2 className="text-xl font-semibold mb-4">Order Items</h2>
                   <div className="space-y-4">
@@ -234,7 +250,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Order Summary */}
+              {/* Order Summary Sidebar */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-lg shadow p-6 sticky top-4">
                   <h2 className="text-xl font-bold text-gray-900 mb-4">
@@ -294,8 +310,7 @@ export default function CheckoutPage() {
                   </Link>
 
                   <p className="text-xs text-gray-500 mt-4 text-center">
-                    After placing the order, you can pay from your Order History
-                    page.
+                    After placing the order, you will be redirected to payment.
                   </p>
                 </div>
               </div>

@@ -1,7 +1,13 @@
 "use client";
 
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, StripeProvider } from "@/components/providers";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <ClerkProvider>{children}</ClerkProvider>;
+  return (
+    <ClerkProvider>
+      <StripeProvider>
+        {children}
+      </StripeProvider>
+    </ClerkProvider>
+  );
 }

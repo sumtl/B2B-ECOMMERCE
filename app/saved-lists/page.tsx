@@ -49,6 +49,15 @@ export default function SavedListsPage() {
     Array<{ id: string; name: string; sku: string; priceCents: number }>
   >([]);
   const [productsLoaded, setProductsLoaded] = useState(false);
+  const [orderConfirm, setOrderConfirm] = useState<{
+    listId: string;
+    addedCount: number;
+    outOfStockItems?: Array<{
+      productName: string;
+      requestedQuantity: number;
+      availableQuantity: number;
+    }>;
+  } | null>(null);
 
   const fetchProducts = async () => {
     try {
@@ -152,12 +161,38 @@ export default function SavedListsPage() {
       });
       const json = await res.json();
       if (json.success) {
-        alert("Items added to cart");
-        window.location.href = "/cart";
+        // Show confirmation for all cases (with or without out-of-stock items)
+        setOrderConfirm({
+          listId: id,
+          addedCount: json.addedItemsCount || json.data.items.length,
+          outOfStockItems: json.outOfStockItems || undefined,
+        });
+      } else {
+        alert(json.error || "Failed to add items");
       }
     } catch (err) {
       console.error("Failed to add items to cart:", err);
       alert("Failed to add items");
+    }
+  };
+
+  const handleDeleteItemFromList = async (listId: string, itemId: string) => {
+    if (!confirm("Remove this item from the list?")) return;
+
+    try {
+      // DELETE /api/saved-lists/[id]/items/[itemId]
+      const res = await fetch(`/api/saved-lists/${listId}/items/${itemId}`, {
+        method: "DELETE",
+      });
+      const json = await res.json();
+      if (json.success) {
+        fetchLists();
+      } else {
+        alert(json.error || "Failed to remove item");
+      }
+    } catch (err) {
+      console.error("Failed to remove item:", err);
+      alert("Failed to remove item");
     }
   };
 
@@ -322,15 +357,26 @@ export default function SavedListsPage() {
                         {list.items.map((item) => (
                           <div
                             key={item.id}
-                            className="flex justify-between text-sm"
+                            className="flex justify-between items-center text-sm"
                           >
-                            <span>
-                              {item.product.name} (SKU: {item.product.sku})
-                            </span>
-                            <span>
-                              ${(item.product.priceCents / 100).toFixed(2)} x{" "}
-                              {item.quantity}
-                            </span>
+                            <div>
+                              <span>
+                                {item.product.name} (SKU: {item.product.sku})
+                              </span>
+                              <div className="text-gray-600">
+                                ${(item.product.priceCents / 100).toFixed(2)} x{" "}
+                                {item.quantity}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() =>
+                                handleDeleteItemFromList(list.id, item.id)
+                              }
+                              className="px-2 py-1 text-xs bg-gray-300 text-gray-700 hover:bg-gray-400 rounded transition-colors"
+                              title="Remove this item from list"
+                            >
+                              Remove
+                            </button>
                           </div>
                         ))}
                       </div>
@@ -448,6 +494,76 @@ export default function SavedListsPage() {
           )}
         </div>
       </div>
+
+      {/* Order Confirmation Modal */}
+      {orderConfirm && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+          onClick={() => setOrderConfirm(null)}
+        >
+          <div
+            className="bg-white rounded-lg shadow-xl max-w-md w-full"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-blue-50 border-b border-blue-200 px-6 py-4">
+              <h3 className="text-lg font-semibold text-blue-900">
+                Items Added to Cart
+              </h3>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-gray-700 mb-4 text-lg">
+                <strong>{orderConfirm.addedCount}</strong> item(s) have been
+                added to your cart.
+              </p>
+
+              {orderConfirm.outOfStockItems &&
+                orderConfirm.outOfStockItems.length > 0 && (
+                  <>
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                      <p className="text-sm font-medium text-yellow-900 mb-3">
+                        {orderConfirm.outOfStockItems.length} item(s) were out
+                        of stock and excluded:
+                      </p>
+                      <div className="space-y-2 max-h-40 overflow-y-auto">
+                        {orderConfirm.outOfStockItems.map((item, idx) => (
+                          <div key={idx} className="text-sm text-yellow-800">
+                            <p className="font-medium">{item.productName}</p>
+                            <p className="text-xs text-yellow-700">
+                              Requested: {item.requestedQuantity} | Available:{" "}
+                              {item.availableQuantity}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-yellow-700 mt-3">
+                        These items remain in your list. When back in stock, you
+                        can add them later.
+                      </p>
+                    </div>
+                  </>
+                )}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={() => {
+                    setOrderConfirm(null);
+                    window.location.href = "/cart";
+                  }}
+                  className="flex-1 px-4 py-2 bg-black hover:bg-gray-800 text-white rounded font-medium transition-colors"
+                >
+                  Go to Cart
+                </button>
+                <button
+                  onClick={() => setOrderConfirm(null)}
+                  className="flex-1 px-4 py-2 bg-gray-200 hover:bg-gray-300 text-black rounded font-medium transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Footer */}
       <footer className={footerStyles.container}>
