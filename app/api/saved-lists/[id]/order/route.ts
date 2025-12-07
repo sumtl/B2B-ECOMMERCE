@@ -32,6 +32,37 @@ export async function POST(
       return jsonError("List is empty", 400);
     }
 
+    // Check inventory for all items first
+    const outOfStockItems: Array<{
+      productId: string;
+      productName: string;
+      requestedQuantity: number;
+      availableQuantity: number;
+    }> = [];
+    for (const item of list.items) {
+      const inventory = await prisma.inventory.findFirst({
+        where: {
+          productId: item.productId,
+          ownerType: "PLATFORM",
+        },
+      });
+
+      if (!inventory || inventory.quantity < item.quantity) {
+        outOfStockItems.push({
+          productId: item.productId,
+          productName: item.product.name,
+          requestedQuantity: item.quantity,
+          availableQuantity: inventory?.quantity || 0,
+        });
+      }
+    }
+
+    // If there are out of stock items, return warning but allow user to proceed
+    // User can choose to skip these items and add only in-stock items to cart
+    const inStockItems = list.items.filter(
+      (item) => !outOfStockItems.some((osi) => osi.productId === item.productId)
+    );
+
     // Get or create cart
     let cart = await prisma.cart.findUnique({
       where: { buyerId: user.id },
@@ -43,9 +74,9 @@ export async function POST(
       });
     }
 
-    // Add all items from list to cart (upsert)
+    // Add only in-stock items from list to cart (upsert)
     const cartItems = [];
-    for (const item of list.items) {
+    for (const item of inStockItems) {
       const cartItem = await prisma.cartItem.upsert({
         where: {
           cartId_productId: { cartId: cart.id, productId: item.productId },
@@ -71,10 +102,26 @@ export async function POST(
       },
     });
 
-    return NextResponse.json(
-      { success: true, message: "Items added to cart", data: updatedCart },
-      { status: 200 }
-    );
+    // Return success, but include warning if any items were out of stock
+    const baseResponse = {
+      success: true as const,
+      message:
+        inStockItems.length > 0 ? "Items added to cart" : "No items added",
+      data: updatedCart,
+    };
+
+    const response =
+      outOfStockItems.length > 0
+        ? {
+            ...baseResponse,
+            warning: "Some items were out of stock and excluded from cart",
+            outOfStockItems,
+            addedItemsCount: inStockItems.length,
+            skippedItemsCount: outOfStockItems.length,
+          }
+        : baseResponse;
+
+    return NextResponse.json(response, { status: 200 });
   } catch (error) {
     console.error("POST /api/saved-lists/[id]/order error:", error);
     return jsonError("Failed to add items to cart", 500);
