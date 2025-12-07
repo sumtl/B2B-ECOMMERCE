@@ -1,4 +1,10 @@
 import { NextResponse } from "next/server";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function jsonError(message: string, status = 400, details?: unknown) {
   return NextResponse.json(

@@ -9,3 +9,9 @@ export {
   CardContent,
 } from "./Card";
 export { Input } from "./Input";
+export {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "./tooltip";
