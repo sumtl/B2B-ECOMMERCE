@@ -203,8 +203,8 @@ export default function SavedListsPage() {
     }
 
     try {
-      // POST /api/saved-lists/[id] - Add product to saved list
-      const res = await fetch(`/api/saved-lists/${listId}`, {
+      // POST /api/saved-lists/[id]/items - Add product to saved list
+      const res = await fetch(`/api/saved-lists/${listId}/items`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
