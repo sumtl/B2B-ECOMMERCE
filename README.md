@@ -18,30 +18,20 @@ A modern B2B e-commerce platform built for efficient business procurement. Buyer
 
 ## Technologies Used
 
-### Frontend
-- **Next.js 16** - React framework with App Router
-- **React 19** - UI library
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Clerk** - Authentication and user management
-
-### Backend
-- **Node.js** - JavaScript runtime
-- **Next.js API Routes** - RESTful API endpoints
-- **Prisma** - ORM for database management
-- **PostgreSQL** - Relational database (Neon for cloud)
-
-### Payment & External Services
-- **Stripe** - Payment processing and checkout
-- **Clerk Webhooks** - User management synchronization
-- **Stripe Webhooks** - Payment event handling
+| Layer              | Technology                                                       |
+| ------------------ | ---------------------------------------------------------------- |
+| **Frontend**       | React with TypeScript (implemented with Next.js 16 — App Router) |
+| **Styling**        | Tailwind CSS                                                     |
+| **Backend**        | Next.js API Routes (Node.js)                                     |
+| **ORM**            | Prisma                                                           |
+| **Database**       | PostgreSQL (Neon)                                                |
+| **Authentication** | Clerk                                                            |
+| **Payments**       | Stripe                                                           |
+| **Deployment**     | Vercel                                                           |
 
 ### Development Tools
-- **npm** or **yarn** - Package manager
-- **Git** - Version control
-
-## Installation
-
+- npm / yarn
+- Git
 ### Prerequisites
 - Node.js 18+ installed
 - PostgreSQL database (or Neon cloud account)
@@ -283,6 +273,12 @@ b2b-ecommerce/
 ## API Endpoints
 
 See [API.md](./API.md) for **complete API documentation** with request/response examples, error codes, and detailed descriptions.
+
+### API Test Requests
+
+You can run the included HTTP request collection for quick testing in VS Code (REST Client) or other HTTP clients.
+
+- **Local REST client file:** [test.rest](./test.rest)
 
 ### Authentication
 - `GET /api/auth/me` - Get current user info
