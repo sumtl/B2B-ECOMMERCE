@@ -1,5 +1,7 @@
 # B2B Commerce - Professional Procurement Platform
 
+**🚀 Live Demo:** [b2-b-ecommerce-five.vercel.app](https://b2-b-ecommerce-five.vercel.app)
+
 A modern B2B e-commerce platform built for efficient business procurement. Buyers can browse products, manage saved lists, and place orders. Admins have full control over inventory, analytics, and order management.
 
 ## Project Overview
@@ -96,6 +98,29 @@ Server runs on `http://localhost:3000`
 npm run build
 npm run start
 ```
+
+### Deployment
+
+This application is deployed on **Vercel**:
+
+**Live Demo URL:** [https://b2-b-ecommerce-five.vercel.app](https://b2-b-ecommerce-five.vercel.app)
+
+**Deploy to Vercel:**
+1. Push code to GitHub repository
+2. Connect repository to Vercel (vercel.com)
+3. Set environment variables in Vercel dashboard
+4. Click Deploy
+5. Vercel automatically builds and deploys on every push to main branch
+
+**Environment Variables Required on Vercel:**
+- `DATABASE_URL` - PostgreSQL connection string (Neon)
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` - Clerk public key
+- `CLERK_SECRET_KEY` - Clerk secret key
+- `CLERK_WEBHOOK_SECRET` - Clerk webhook secret
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` - Stripe public key
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook secret
+- `NEXT_PUBLIC_APP_URL` - Set to `https://b2-b-ecommerce-five.vercel.app`
 
 ### Database & Prisma Commands
 ```bash
